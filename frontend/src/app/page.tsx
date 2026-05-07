@@ -61,7 +61,7 @@ export default function Home() {
     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
       <Navbar theme={theme} onToggleTheme={toggle} onReset={handleReset} hasResult={!!result} />
 
-      <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 24px" }}>
+      <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "clamp(16px, 4vw, 32px) clamp(12px, 3vw, 24px)" }}>
         {/* Page header */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -69,7 +69,7 @@ export default function Home() {
           transition={{ duration: 0.4 }}
           style={{ marginBottom: "28px" }}
         >
-          <h1 className="font-display" style={{ fontSize: "36px", color: "var(--text-primary)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+          <h1 className="font-display" style={{ fontSize: "clamp(24px, 5vw, 36px)", color: "var(--text-primary)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
             Breast Cancer<br />
             <span style={{ color: "var(--accent)" }}>Classification</span>
           </h1>

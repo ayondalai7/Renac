@@ -54,7 +54,7 @@ export default function PredictTab({ onResult, result, loading, error, onPredict
   }
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: result ? "1fr 1fr" : "1fr", gap: "24px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: result ? "min(100%, 500px) 1fr" : "1fr", gap: "24px" }}>
 
       {/* Form panel */}
       <motion.div layout className="card" style={{ padding: "28px" }}>

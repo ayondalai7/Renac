@@ -288,3 +288,26 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .text-muted     { color: var(--text-muted); }
 .bg-surface     { background: var(--surface); }
 .border-default { border-color: var(--border); }
+
+/* ── Mobile Responsive ────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .glass-pill-container {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    border-radius: 12px;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .glass-pill {
+    padding: 7px 12px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .disclaimer {
+    font-size: 10.5px;
+    padding: 6px 10px;
+    line-height: 1.4;
+  }
+}

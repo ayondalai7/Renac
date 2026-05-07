@@ -22,7 +22,7 @@ export default function Navbar({ theme, onToggleTheme, onReset, hasResult }: Pro
       <div style={{
         background: "var(--bg)",
         borderBottom: "1px solid var(--border)",
-        padding: "0 24px",
+        padding: "0 clamp(12px, 3vw, 24px)",
         height: "56px",
         display: "flex",
         alignItems: "center",
