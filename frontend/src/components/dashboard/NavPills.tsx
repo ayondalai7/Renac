@@ -5,7 +5,8 @@ const TABS: { key: NavTab; label: string }[] = [
   { key: "predict",    label: "Predict" },
   { key: "confidence", label: "Confidence" },
   { key: "features",   label: "Features" },
-  { key: "upload",     label: "Upload" },
+  { key: "upload",     label: "Lab Upload" },
+  { key: "dataset",    label: "Dataset" },
 ];
 
 interface Props {

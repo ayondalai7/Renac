@@ -5,7 +5,7 @@ import { useAuth }       from "@/hooks/useAuth";
 import { useTheme }      from "@/hooks/useTheme";
 import { usePrediction } from "@/hooks/usePrediction";
 import { checkHealth }   from "@/lib/api";
-import { NavTab, ModelKey, PredictionResponse } from "@/types";
+import { NavTab, ModelKey } from "@/types";
 
 import LockScreen    from "@/components/auth/LockScreen";
 import Navbar        from "@/components/layout/Navbar";
@@ -14,16 +14,16 @@ import PredictTab    from "@/components/dashboard/PredictTab";
 import ConfidenceTab from "@/components/dashboard/ConfidenceTab";
 import FeaturesTab   from "@/components/dashboard/FeaturesTab";
 import UploadTab     from "@/components/dashboard/UploadTab";
+import DatasetTab    from "@/components/dashboard/DatasetTab";
 
 export default function Home() {
-  const { authenticated, login } = useAuth();
-  const { theme, toggle }        = useTheme();
-  const { result, loading, error, runPrediction, runCSVPrediction, reset } = usePrediction();
+  const { authenticated, login }   = useAuth();
+  const { theme, toggle }          = useTheme();
+  const { result, csvResult, loading, error, runPrediction, runCSVPrediction, reset } = usePrediction();
 
-  const [tab, setTab]             = useState<NavTab>("predict");
+  const [tab, setTab]               = useState<NavTab>("predict");
   const [serverReady, setServerReady] = useState(false);
 
-  // Wake up server on mount after auth
   useEffect(() => {
     if (!authenticated) return;
     let tries = 0;
@@ -36,16 +36,13 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [authenticated]);
 
-  // When result arrives, stay on predict tab (user can navigate)
   const disabledTabs: NavTab[] = result ? [] : ["confidence", "features"];
 
-  if (authenticated === null) return null; // Hydration guard
+  if (authenticated === null) return null;
 
   if (!authenticated) {
     return <LockScreen onSuccess={() => login("6969")} />;
   }
-
-  function handleLogin(pw: string) { login(pw); }
 
   function handleTabChange(t: NavTab) {
     if (!result && (t === "confidence" || t === "features")) return;
@@ -62,7 +59,6 @@ export default function Home() {
       <Navbar theme={theme} onToggleTheme={toggle} onReset={handleReset} hasResult={!!result} />
 
       <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "clamp(16px, 4vw, 32px) clamp(12px, 3vw, 24px)" }}>
-        {/* Page header */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -75,11 +71,10 @@ export default function Home() {
           </h1>
           <p style={{ marginTop: "10px", fontSize: "14px", color: "var(--text-muted)", maxWidth: "480px" }}>
             ML-powered tumour analysis using the UCI Wisconsin dataset.
-            Enter feature values manually or upload a CSV prescription file.
+            For clinical use — enter feature values or upload a lab report CSV.
           </p>
         </motion.div>
 
-        {/* Nav pills */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -87,14 +82,13 @@ export default function Home() {
           style={{ marginBottom: "28px" }}
         >
           <NavPills active={tab} onChange={handleTabChange} disabled={disabledTabs} />
-          {!result && (
+          {!result && tab !== "dataset" && tab !== "upload" && (
             <p style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "8px" }}>
               Run a prediction first to unlock Confidence and Features tabs.
             </p>
           )}
         </motion.div>
 
-        {/* Tab content */}
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
@@ -110,9 +104,7 @@ export default function Home() {
                 error={error}
                 serverReady={serverReady}
                 onResult={() => {}}
-                onPredict={(features: number[], model: ModelKey) => {
-                  runPrediction(features, model);
-                }}
+                onPredict={(features: number[], model: ModelKey) => runPrediction(features, model)}
               />
             )}
             {tab === "confidence" && result && <ConfidenceTab result={result} />}
@@ -121,13 +113,12 @@ export default function Home() {
               <UploadTab
                 loading={loading}
                 error={error}
+                csvResult={csvResult}
                 onResult={() => {}}
-                onUploadPredict={(file: File, model: ModelKey) => {
-                  runCSVPrediction(file, model);
-                  setTab("predict");
-                }}
+                onUploadPredict={(file: File, model: ModelKey) => runCSVPrediction(file, model)}
               />
             )}
+            {tab === "dataset" && <DatasetTab />}
           </motion.div>
         </AnimatePresence>
       </main>

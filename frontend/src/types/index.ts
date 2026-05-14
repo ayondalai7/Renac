@@ -43,5 +43,37 @@ export interface FeaturesMeta {
   feature_ranges: Record<string, { min: number; max: number; mean: number }>;
 }
 
-export type NavTab = "predict" | "confidence" | "features" | "upload";
+export interface FeatureStat {
+  name: string;
+  min: number;
+  max: number;
+  mean: number;
+  std: number;
+}
+
+export interface DatasetInfo {
+  total_samples: number;
+  total_features: number;
+  benign_count: number;
+  malignant_count: number;
+  feature_names: string[];
+  feature_stats: FeatureStat[];
+  sample_rows: Record<string, number | string>[];
+  source: string;
+  missing_values: number;
+}
+
+export interface CSVUploadResult {
+  predictions: PredictionResponse[];
+  total_rows: number;
+  successful_rows: number;
+  failed_rows: number;
+  matched_columns: number;
+  missing_features: string[];
+  unmatched_columns: string[];
+  column_map: Record<string, string>;
+  errors: { row: number; error: string }[];
+}
+
+export type NavTab = "predict" | "confidence" | "features" | "upload" | "dataset";
 export type Theme = "light" | "dark";
